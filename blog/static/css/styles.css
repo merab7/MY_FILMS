@@ -1,0 +1,25 @@
+.rounded-logo {
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+}
+
+/* Default styles for all screen sizes */
+.login_div {
+    width: 30%;
+}
+
+/* Medium and Large screens (greater than or equal to 768px) */
+@media (min-width: 768px) {
+    .login_div {
+        width: 40%;
+    }
+}
+
+/* Small screens (less than 768px) */
+@media (max-width: 767px) {
+    .login_div {
+        width: 70%;
+    }
+}
