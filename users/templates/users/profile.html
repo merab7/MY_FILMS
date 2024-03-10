@@ -1,26 +1,28 @@
 {% extends 'blog/base.html' %} {% load crispy_forms_tags %} {% block content %}
-<div class="container mt-5 p-5 card text-center">
-  <div class="card-header">
-    <ul class="nav nav-tabs card-header-tabs">
-      <li class="nav-item">
-        <a class="nav-link active" aria-current="true" href="#">Active</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">My Films</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link">My Top 10</a>
-      </li>
-    </ul>
+<div class="container">
+  <div>
+    <div class="d-flex flex-row mt-5">
+      <img
+        src="{{ user.profile.image.url }}"
+        class="rounded-circle account-img"
+      />
+
+      <div class="media-body">
+        <h2 class="account-heading">{{ user.username }}</h2>
+        <p class="text-secondary">{{ user.email }}</p>
+        <div>
+          <a class="btn btn-warning" href="#">My films</a>
+          <a class="btn btn-success" href="#">My T10</a>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="container">
+  <div class="mt-5 p-5 border profile_div">
     <form action="" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
-      <fieldset class="form-group">
-        <legend class="border-bottom mb-4">Profile Info</legend>
-        {{u_form | crispy}} {{p_form | crispy}}
-      </fieldset>
-      <div class="form-grupe">
+      <legend class="border-bottom mb-4">Profile Info</legend>
+      {{u_form | crispy }} {{p_form | crispy }}
+      <div>
         <button class="btn btn-outline-info mt-4" type="submit">Update</button>
       </div>
     </form>

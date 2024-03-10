@@ -1,21 +1,36 @@
-{% extends 'blog/base.html' %} {% load crispy_forms_tags %}{% block content %}
+{% extends 'blog/base.html' %} {% load crispy_forms_tags %} {% block content %}
 <div class="container">
   <div class="container mt-5 login_div border p-5">
-    <h2 class="mb-5">Login</h2>
-    <form method="post">
-      {% csrf_token %} {{ form|crispy }}
-      <button type="submit" class="btn btn-primary mt-3">Login</button>
-    </form>
-    <div class="mt-4 d-flex flex-column">
-      <small
-        >Do not have an account?
-        <a href="#">Register</a>
-      </small>
+    <h2 class="mb-4 text-center">Login</h2>
+    <form method="post" class="needs-validation" novalidate>
+      {% csrf_token %}
 
+      <!-- Username -->
+      <div class="mb-3">
+        {{ form.username|as_crispy_field }}
+        <div class="invalid-feedback">{{ form.username.errors|join:", " }}</div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        {{ form.password|as_crispy_field }}
+        <div class="invalid-feedback">{{ form.password.errors|join:", " }}</div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block mt-4">
+        Login
+      </button>
+    </form>
+
+    <div class="mt-4 text-center">
       <small
-        >Forgot password?
-        <a href="#">Reset</a>
-      </small>
+        >Don't have an account?
+        <a href="{% url 'register' %}">Register</a></small
+      >
+    </div>
+
+    <div class="mt-2 text-center">
+      <small>Forgot password? <a href="#">Reset</a></small>
     </div>
   </div>
 </div>

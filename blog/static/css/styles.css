@@ -1,3 +1,62 @@
+/* Custom Styles */
+
+/* Add a bit of padding to the body */
+body {
+    padding-top: 2px; /* Adjust based on your navbar height */
+}
+
+/* Override Bootstrap container for more spacing */
+.container {
+    margin-top: 20px;
+}
+
+/* Style for the main heading */
+h1 {
+    color: #333;
+}
+
+/* Style for the section headings */
+h2 {
+    color: #007bff; /* Bootstrap primary color */
+}
+
+/* Add a subtle shadow to images */
+img {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for the form */
+form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Style for buttons */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Slightly darker on hover */
+    border-color: #0056b3;
+}
+
+/* Style for the footer */
+footer {
+    margin-top: 20px;
+}
+
+/* Responsive styles */
+@media (max-width: 576px) {
+    /* Adjustments for small screens */
+    body {
+        padding-top: 50px;
+    }
+}
+
+
+
 .rounded-logo {
     border-radius: 50%;
     width: 70px;
@@ -23,3 +82,30 @@
         width: 70%;
     }
 }
+
+/* Default styles for all screen sizes */
+.profile_div {
+    width: 50%;
+}
+
+/* Medium and Large screens (greater than or equal to 768px) */
+@media (min-width: 768px) {
+    .profile_div {
+        width: 40%;
+    }
+}
+
+/* Small screens (less than 768px) */
+@media (max-width: 767px) {
+    .profile_div {
+        width: 70%;
+    }
+}
+
+
+.account-img {
+    height: 125px;
+    width: 125px;
+    margin-right: 20px;
+    margin-bottom: 16px;
+  }

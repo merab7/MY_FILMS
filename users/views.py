@@ -6,6 +6,7 @@ from django.views.generic.edit import CreateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -27,7 +28,7 @@ class SignUpView(SuccessMessageMixin, CreateView):
     form_class = UserRegistrationForm
     success_message = 'Your profile was created successfully'
 
-
+@login_required
 def profile(request):
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=request.user)

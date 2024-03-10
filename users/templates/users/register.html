@@ -1,10 +1,46 @@
-{% extends 'blog/base.html' %} {% load crispy_forms_tags %}{% block content %}
+{% extends 'blog/base.html' %} {% load crispy_forms_tags %} {% block content %}
 <div class="container">
-  <div class="container mt-5 login_div border p-5">
-    <h2 class="mb-5">Sign Up</h2>
-    <form method="post">
-      {% csrf_token %} {{ form|crispy }}
-      <button class="btn btn-info mt-5" type="submit">Sign Up</button>
+  <div class="container mt-5 login_div border p-4">
+    <h2 class="mb-4 text-center">Sign Up</h2>
+    <form method="post" class="needs-validation" novalidate>
+      {% csrf_token %}
+
+      <!-- Username -->
+      <div class="mb-3">
+        {{ form.username|as_crispy_field }}
+        <div class="invalid-feedback">{{ form.username.errors|join:", " }}</div>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        {{ form.email|as_crispy_field }}
+        <div class="invalid-feedback">{{ form.email.errors|join:", " }}</div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        {{ form.password1|as_crispy_field }}
+        <div class="invalid-feedback">
+          {{ form.password1.errors|join:", " }}
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="mb-3">
+        {{ form.password2|as_crispy_field }}
+        <div class="invalid-feedback">
+          {{ form.password2.errors|join:", " }}
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-block mt-4" type="submit">
+        Sign Up
+      </button>
+      <div class="mt-4 text-center">
+        <small
+          >Do You have an account? <a href="{% url 'login' %}">Login</a></small
+        >
+      </div>
     </form>
   </div>
 </div>
