@@ -1,0 +1,30 @@
+{% extends 'blog/base.html' %} {% load crispy_forms_tags %} {% block content %}
+<div class="container mt-5 p-5 card text-center">
+  <div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="true" href="#">Active</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">My Films</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link">My Top 10</a>
+      </li>
+    </ul>
+  </div>
+  <div class="container">
+    <form action="" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Profile Info</legend>
+        {{u_form | crispy}} {{p_form | crispy}}
+      </fieldset>
+      <div class="form-grupe">
+        <button class="btn btn-outline-info mt-4" type="submit">Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
