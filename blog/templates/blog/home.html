@@ -1,6 +1,53 @@
 {% extends 'blog/base.html' %} {% block content %}
-<div class="container">
-  <h1>My films Home page</h1>
-</div>
+<div class="container mt-4 d-flex justify-content-center">
+  <div class="col-md-6">
+    {% for post in posts %}
+    <div class="card mb-5">
+      <div class="card-header">
+        <div class="row align-items-center">
+          <div class="col-auto">
+            <img
+              class="img-fluid rounded-circle account-img"
+              src="{{ post.author.profile.image.url }}"
+              alt=""
+            />
+          </div>
+          <div class="col">
+            <a href="#" class="card-title">{{ post.author }}</a>
+            <small class="text-muted d-block"
+              >{{ post.date_created|date:"F d, Y" }}</small
+            >
+          </div>
+        </div>
+      </div>
 
+      <div class="p-5 border">
+        <p class="card-text">{{ post.post_text}}</p>
+      </div>
+
+      <div class="p-5">
+        <img
+          src="{{post.film.img_url}}"
+          class="card-img-top square-image"
+          alt="{{post.film.title}}"
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{post.film.title}}</h5>
+          <p class="card-text">{{post.film.year}}</p>
+          <p class="card-text">{{post.film.description|truncatechars:200}}</p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">IMDB {{post.film.rating}}</li>
+          <li class="list-group-item">{{post.film.ranking}}</li>
+          <li class="list-group-item">{{post.film.review}}</li>
+        </ul>
+      </div>
+    </div>
+    {% empty %}
+    <div class="text-center">
+      <h1>No posts yet</h1>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

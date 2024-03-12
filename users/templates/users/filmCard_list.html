@@ -47,7 +47,11 @@
               <p class="list-group-item">{{film_card.review}}</p>
             </ul>
             <div class="card-footer d-flex justify-content-between">
-              <a href="#" class="btn post-btn">POST</a>
+              <a
+                href="{% url 'post-film' pk=film_card.pk %}"
+                class="btn post-btn"
+                >POST</a
+              >
               <a href="#" class="btn t10-btn">T10</a>
               <a href="#" class="btn edit-btn">EDIT</a>
               <a href="#" class="btn delete-btn">DELETE</a>

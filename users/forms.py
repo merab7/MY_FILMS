@@ -39,4 +39,9 @@ class FilmReviewForm(forms.Form):
         required=False,
     )
       
-     
+class Post_text_form(forms.Form):
+    post_text = forms.CharField(
+        label='text',
+        widget=forms.Textarea(attrs={'class': 'form-control'}),
+        required=True,
+    )

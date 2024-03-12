@@ -104,8 +104,8 @@ footer {
 
 
 .account-img {
-    height: 125px;
-    width: 125px;
+    height: 90px;
+    width: 90px;
     margin-right: 20px;
     margin-bottom: 16px;
   }
@@ -134,4 +134,12 @@ footer {
 
   .delete-btn:hover {
     background-color: #c82333;
+  }
+
+
+
+  .square-image {
+    object-fit: cover;
+    height: 30%; /* Adjust the height as needed */
+    width: 30%; /* Ensure the image covers the entire container */
   }

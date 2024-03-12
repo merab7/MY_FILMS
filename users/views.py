@@ -1,14 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
-from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, FilmSearchForm, FilmReviewForm
+from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, FilmSearchForm, FilmReviewForm, Post_text_form
 from django.views.generic.edit import CreateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from blog.models import FilmCard
+from blog.models import FilmCard, Post
 from django.views.generic.list import ListView
 from .films_from_api import Film_data
 from django.views import View
@@ -107,6 +105,7 @@ def add_to_my_films(request, id):
                     review=form.cleaned_data['review'],
                     img_url=f"{MOVIE_DB_IMAGE_URL}{film['poster_path']}",
                     author=request.user,
+                    
                 )
 
                 film_to_add.save()
@@ -126,6 +125,35 @@ def add_to_my_films(request, id):
     return redirect('user-films')
 
 
+def post_film(request, pk):
+    film = FilmCard.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        form = Post_text_form(request.POST)  # Create an instance of the form
+        if form.is_valid():
+            post_text = form.cleaned_data['post_text']
+            author = request.user
+
+            post = Post.objects.create(
+                post_text=post_text,
+                film=film,
+                author=author,
+            )
+
+            messages.success(request, 'Your post has been added to the home page!')
+            return redirect('blog-home')
+    else:
+        form = Post_text_form()
+
+    context = {'form': form}
+    return render(request, 'users/post_text.html', context)
+
+
+
+       
+   
+    
+   
 
     
 
