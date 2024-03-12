@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, FilmSearchForm
+from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, FilmSearchForm, FilmReviewForm
 from django.views.generic.edit import CreateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
@@ -62,7 +63,7 @@ def profile(request):
 
 class FilmListView(LoginRequiredMixin, ListView):
     model = FilmCard
-    paginate_by = 5  # if pagination is desired
+    paginate_by = 4  # if pagination is desired
 
     def get_queryset(self):
         form = FilmSearchForm(self.request.GET)
@@ -85,7 +86,7 @@ class FilmListView(LoginRequiredMixin, ListView):
     
 
 
-from django.contrib import messages
+
 
 def add_to_my_films(request, id):
     data = Film_data()
@@ -94,22 +95,35 @@ def add_to_my_films(request, id):
     MOVIE_DB_IMAGE_URL = "https://image.tmdb.org/t/p/w500"
 
     if film:
-        film_to_add = FilmCard(
-            title=film['original_title'],
-            year=film['release_date'],
-            description=film['overview'],
-            rating=film['vote_average'],
-            ranking=0,  
-            review="",  
-            img_url=f"{MOVIE_DB_IMAGE_URL}{film['poster_path']}",
-            author = request.user
-        )
+        if request.method == 'POST':
+            form = FilmReviewForm(request.POST)
+            if form.is_valid():
+                film_to_add = FilmCard(
+                    title=film['original_title'],
+                    year=film['release_date'],
+                    description=film['overview'],
+                    rating=film['vote_average'],
+                    ranking=form.cleaned_data['rating'],
+                    review=form.cleaned_data['review'],
+                    img_url=f"{MOVIE_DB_IMAGE_URL}{film['poster_path']}",
+                    author=request.user,
+                )
 
-        film_to_add.save()
-        messages.success(request, 'The film has been added')
+                film_to_add.save()
+                messages.success(request, 'The film has been added with your review and rating')
+                return redirect('user-films')
+        else:
+            form = FilmReviewForm()
 
-    return redirect('user-films')  
+        context = {
+            'form': form,
+            'film': film,
+        }
 
+        return render(request, 'users/review_ranking.html', context)
+
+    messages.error(request, 'Film not found')
+    return redirect('user-films')
 
 
 

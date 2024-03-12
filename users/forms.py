@@ -24,5 +24,19 @@ class ProfileUpdateForm(forms.ModelForm):
 
 class FilmSearchForm(forms.Form):
     search = forms.CharField(label='Search')
+
+
+class FilmReviewForm(forms.Form):
+    rating = forms.FloatField(
+        label='my_rank',
+        min_value=1,
+        max_value=10,
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+    )
+    review = forms.CharField(
+        label='Review',
+        widget=forms.Textarea(attrs={'class': 'form-control'}),
+        required=False,
+    )
       
      

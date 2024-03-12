@@ -8,7 +8,7 @@ class FilmCard(models.Model):
     year = models.CharField(max_length=100)
     description = models.TextField()
     rating = models.FloatField()
-    ranking = models.IntegerField()
+    ranking = models.CharField(max_length=100)
     review = models.TextField()
     img_url = models.ImageField()
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)

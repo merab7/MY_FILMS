@@ -31,11 +31,7 @@
         {% for film_card in object_list %}
         <div class="col">
           <div class="card h-100 content-center">
-            <img
-              src="{{film_card.img_url}}"
-              class="card-img-top film-img"
-              alt="{{film_card.title}}"
-            />
+            <img src="{{film_card.img_url}}" class="card-img-top film-img" />
             <div class="card-body">
               <h5 class="card-title">{{film_card.title}}</h5>
               <p class="card-text">{{film_card.year}}</p>
@@ -47,8 +43,8 @@
               <li class="list-group-item text-warning">
                 IMDB {{film_card.rating}}
               </li>
-              <li class="list-group-item">{{film_card.ranking}}</li>
-              <li class="list-group-item">{{film_card.review}}</li>
+              <p class="list-group-item">{{film_card.ranking}}</p>
+              <p class="list-group-item">{{film_card.review}}</p>
             </ul>
             <div class="card-footer d-flex justify-content-between">
               <a href="#" class="btn post-btn">POST</a>
@@ -65,6 +61,34 @@
         {% endfor %}
       </div>
     </div>
+    <div class="mt-5">
+      {% if is_paginated %} {% if page_obj.has_previous %}
+      <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+      <a
+        class="btn btn-outline-info mb-4"
+        href="?page={{ page_obj.previous_page_number }}"
+        >Previous</a
+      >
+      {% endif %}{% for num in page_obj.paginator.page_range %}
+      <a
+        class="{% if page_obj.number == num %}btn btn-info{% else %}btn btn-outline-info{% endif %} mb-4"
+        href="?page={{ num }}"
+        >{{ num }}</a
+      >
+
+      {% endfor %} {% if page_obj.has_next %}
+      <a
+        class="btn btn-outline-info mb-4"
+        href="?page={{ page_obj.next_page_number }}"
+        >Next</a
+      >
+      <a
+        class="btn btn-outline-info mb-4"
+        href="?page={{ page_obj.paginator.num_pages }}"
+        >Last</a
+      >
+      {% endif %} {% endif %}
+    </div>
   </div>
-  {% endblock %}
 </div>
+{% endblock %}
