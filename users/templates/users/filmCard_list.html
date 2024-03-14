@@ -40,10 +40,12 @@
               </p>
             </div>
             <ul class="list-group list-group-flush">
-              <li class="list-group-item text-warning">
+              <li class="list-group-item text-warning fs-5">
                 IMDB {{film_card.rating}}
               </li>
-              <p class="list-group-item">{{film_card.ranking}}</p>
+              <p class="list-group-item text-primary text-bolder fs-5">
+                {{film_card.ranking}}
+              </p>
               <p class="list-group-item">{{film_card.review}}</p>
             </ul>
             <div class="card-footer d-flex justify-content-between">
@@ -53,8 +55,16 @@
                 >POST</a
               >
               <a href="#" class="btn t10-btn">T10</a>
-              <a href="#" class="btn edit-btn">EDIT</a>
-              <a href="#" class="btn delete-btn">DELETE</a>
+              <a
+                href="{% url 'update-filmCard' pk=film_card.pk %}"
+                class="btn edit-btn"
+                >EDIT</a
+              >
+              <a
+                href="{% url 'delete-film' pk=film_card.pk %}"
+                class="btn delete-btn"
+                >DELETE</a
+              >
             </div>
           </div>
         </div>

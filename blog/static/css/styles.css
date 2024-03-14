@@ -41,6 +41,22 @@ form {
     background-color: #0056b3; /* Slightly darker on hover */
     border-color: #0056b3;
 }
+.btn-like:hover {
+    background-color: #ed8fd9; /* Slightly darker on hover */
+    border-color: #ed8fd9;
+    width: 50px;
+
+}
+.btn-comment:hover {
+    background-color: #0056b3; /* Slightly darker on hover */
+    border-color: #0056b3;
+    width: 50px;
+
+}
+.btn :hover {
+  opacity: 1;
+}
+
 
 /* Style for the footer */
 footer {
@@ -140,6 +156,6 @@ footer {
 
   .square-image {
     object-fit: cover;
-    height: 30%; /* Adjust the height as needed */
-    width: 30%; /* Ensure the image covers the entire container */
+    height: 100%; /* Adjust the height as needed */
+    width: 100%; /* Ensure the image covers the entire container */
   }

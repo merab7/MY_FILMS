@@ -13,6 +13,11 @@
         <div>
           <a class="btn btn-warning" href="{% url 'user-films' %}">My films</a>
           <a class="btn btn-success" href="#">My T10</a>
+          <a
+            class="btn btn-info"
+            href="{% url 'user-posts' username=user.username %}"
+            >Posts</a
+          >
         </div>
       </div>
     </div>
@@ -21,12 +26,11 @@
     <form action="" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       <legend class="border-bottom mb-4">Profile Info</legend>
-      {{u_form | crispy }} {{p_form | crispy }}
+      {{ u_form | crispy }} {{ p_form | crispy }}
       <div>
         <button class="btn btn-outline-info mt-4" type="submit">Update</button>
       </div>
     </form>
   </div>
 </div>
-
 {% endblock %}

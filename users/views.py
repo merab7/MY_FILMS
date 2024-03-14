@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, FilmSearchForm, FilmReviewForm, Post_text_form
 from django.views.generic.edit import CreateView
@@ -9,11 +9,9 @@ from django.contrib.auth.decorators import login_required
 from blog.models import FilmCard, Post
 from django.views.generic.list import ListView
 from .films_from_api import Film_data
-from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-
-
+from django.views.generic.edit import DeleteView, UpdateView
+from django.contrib.auth.models import User
 
 
 
@@ -149,13 +147,38 @@ def post_film(request, pk):
     return render(request, 'users/post_text.html', context)
 
 
-
+class FilmFromMyFilmsDeleteView(DeleteView):
+    model = FilmCard
+    success_url = reverse_lazy("user-films")
        
    
     
    
-
+def user_posts(request, username):
+    post_author_user = get_object_or_404(User, username=username)
+    posts = Post.objects.filter(author=post_author_user)
+    context = {
+        'posts' : posts,
+        'post_author_user' : post_author_user,
+    }
     
+    return render(request, 'users/users_posts.html', context)
+
+
+class PostUpdateView(UpdateView):
+    model = Post
+    fields = ["post_text"]
+    template_name_suffix = "_update_form"
+    success_url = reverse_lazy("blog-home")
+
+
+
+class FilmCardUpdateView(UpdateView):
+    model = FilmCard
+    fields = ["ranking", "review"]
+    template_name_suffix = "_update_form"
+    success_url = reverse_lazy("user-films")
+
 
 
 

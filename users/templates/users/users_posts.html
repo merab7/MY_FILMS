@@ -2,6 +2,7 @@
 <div class="container mt-4">
   <div class="row justify-content-center">
     <div class="col-md-8">
+      <h2 class="mt-5 mb-5">Posts from {{ post_author_user.username }}</h2>
       {% for post in posts %}
       <div class="card mb-5">
         <div class="card-header">
@@ -13,9 +14,7 @@
                 alt="{{ post.author }}"
               />
               <div class="ms-3">
-                <a href="{% url 'user-posts' username=post.author.username  %}"
-                  >{{ post.author }}</a
-                >
+                <a href="#" class="card-title">{{ post.author }}</a>
                 <small class="text-muted d-block"
                   >{{ post.date_created|date:"F d, Y" }}</small
                 >
@@ -90,10 +89,11 @@
       <div class="text-center">
         <h1>No posts yet</h1>
       </div>
-      {% endfor %}
+      {% endfor %} {% if user == post_author_user %}
       <a href="{% url 'user-films' %}" class="btn btn-success mt-5 mb-5"
         >Add Post</a
       >
+      {% endif %}
     </div>
   </div>
 </div>

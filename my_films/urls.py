@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from users.views import SignUpView, user_not_authenticated, FilmListView
+from users.views import SignUpView, user_not_authenticated, FilmListView, FilmFromMyFilmsDeleteView, PostUpdateView, FilmCardUpdateView
+from blog.views import PostDeleteView
 from django.contrib.auth.decorators import login_required
 from . import settings
 from django.conf.urls.static import static
@@ -23,6 +24,10 @@ urlpatterns = [
     path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(template_name = "users/password_reset_done.html"), name ='password_reset_complete'),
     #FILMS
     path('my-films/', login_required( FilmListView.as_view(template_name = "users/filmCard_list.html")), name='user-films'),
+    path('delete-film/<pk>', login_required(FilmFromMyFilmsDeleteView.as_view(template_name = "users/filmCard_confirm_delete.html")), name='delete-film'),
+    path('delete-post/<pk>', login_required(PostDeleteView.as_view(template_name = "blog/filmCard_confirm_delete.html")), name='delete-post'),
+    path('edit-post/<pk>', login_required(PostUpdateView.as_view(template_name = "users/post_update_form.html")), name='update-post'),
+    path('edit-filmCard/<pk>', login_required(FilmCardUpdateView.as_view(template_name = "users/filmCard_update_form.html")), name='update-filmCard'),
   
 ]
 
