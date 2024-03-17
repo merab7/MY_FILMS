@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
-
+from datetime import datetime
 class FilmCard(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True, null=True)
     title = models.CharField(max_length=100)
     year = models.CharField(max_length=100)
     description = models.TextField()

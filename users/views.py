@@ -12,7 +12,7 @@ from .films_from_api import Film_data
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import DeleteView, UpdateView
 from django.contrib.auth.models import User
-
+from django.db.models import F
 
 
 
@@ -62,6 +62,7 @@ class FilmListView(LoginRequiredMixin, ListView):
     model = FilmCard
     paginate_by = 4  # if pagination is desired
 
+
     def get_queryset(self):
         form = FilmSearchForm(self.request.GET)
         data = Film_data()
@@ -72,7 +73,7 @@ class FilmListView(LoginRequiredMixin, ListView):
         else:
             self.film_options = []
 
-        return FilmCard.objects.filter(author=self.request.user)
+        return FilmCard.objects.filter(author=self.request.user).order_by('-date_created')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -184,14 +185,15 @@ class FilmCardUpdateView(LoginRequiredMixin,UpdateView):
     success_url = reverse_lazy("user-films")
 
 
-class My_Top_10_listView(LoginRequiredMixin,ListView):
+class My_Top_10_listView(LoginRequiredMixin, ListView):
     model = MyT_10
     paginate_by = 4
 
     def get_queryset(self):
         # Filter queryset to only include films added by the current user
         queryset = MyT_10.objects.filter(author=self.request.user)
-
+        # Order queryset by rank
+        queryset = queryset.order_by('rank')
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -199,14 +201,9 @@ class My_Top_10_listView(LoginRequiredMixin,ListView):
         context = super().get_context_data(**kwargs)
         # Add in the queryset of films for the current user
         context['my_films'] = self.get_queryset()
-        
         return context
 
 
-
-
-def add_to_t10(request, pk):
-    film = FilmCard.objects.get(pk=pk)
 
 
 def add_to_t10(request, pk):
@@ -217,11 +214,17 @@ def add_to_t10(request, pk):
         if form.is_valid():
             rank = form.cleaned_data.get('rank')
             if MyT_10.objects.filter(film=film).exists():
-                messages.error(request, f'Film {film.title} already exists in the TOP_10.')
-                return redirect('user-films')  # Redirect to appropriate page
-            MyT_10.objects.create(rank=rank, film=film, author=request.user)
-            messages.success(request, f'Film {film.title} has been added to the TOP_10.')
-            return redirect('user-t10')  # Redirect to appropriate page
+                messages.error(request, f'{film.title} is already in top 10!')
+                return redirect('user-films')
+            elif MyT_10.objects.filter(rank=rank, author=request.user).exists():
+                conflicting_film_title = MyT_10.objects.get(rank=rank).film.title
+                messages.error(request, f'Position {rank} is already taken by {conflicting_film_title}!')
+            elif MyT_10.objects.count() > 10:
+                messages.error(request, 'Top 10 is full')
+            else:
+                MyT_10.objects.create(rank=rank, film=film, author=request.user)
+                messages.success(request, f'Film {film.title} has been added to the TOP_10.')
+                return redirect('user-t10')  # Redirect to appropriate page after successful addition
         else:
             messages.error(request, 'Please check the validity of the form and try again!')
     else:
@@ -232,6 +235,7 @@ def add_to_t10(request, pk):
         'film': film,
     }
     return render(request, 'users/rank_form.html', context)
+
 
 
 
@@ -254,3 +258,17 @@ def post_author_t10(request, username):
 
     return render(request, 'users/authorsT10.html', context)
     
+
+class Rank_update_view(LoginRequiredMixin, UpdateView):
+    model = MyT_10
+    fields = ["rank"]
+    template_name_suffix = "_update_form"
+    success_url = reverse_lazy("user-t10")
+
+    def form_valid(self, form):
+        rank = form.cleaned_data['rank']
+        if MyT_10.objects.filter(rank=rank, author=self.request.user).exists():
+            conflicting_film_title = MyT_10.objects.get(rank=rank).film.title
+            messages.error(self.request, f'Position {rank} is already taken by {conflicting_film_title}!')
+            return self.form_invalid(form)
+        return super().form_valid(form)

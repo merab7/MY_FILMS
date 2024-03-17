@@ -5,6 +5,9 @@
     {% for film_card in my_films %}
     <div class="col-lg-4 mb-4">
       <div class="card h-100 content-center">
+        <!-- Overlay div for rank number -->
+        <div class="rank-overlay">{{ film_card.rank }}</div>
+        <!-- Film image -->
         <img src="{{ film_card.film.img_url }}" class="card-img-top film-img" />
         <div class="card-body">
           <h5 class="card-title">{{ film_card.film.title }}</h5>
@@ -22,14 +25,15 @@
           </p>
           <p class="list-group-item">{{ film_card.film.review }}</p>
         </ul>
-
         <div class="card-footer d-flex justify-content-between">
           <a
             href="{% url 't10-delete' pk=film_card.pk %}"
             class="btn delete-btn"
             >POP</a
           >
-          <a href="#" class="btn edit-btn">EDIT</a>
+          <a href="{% url 'update-rank' pk=film_card.pk %}" class="btn edit-btn"
+            >EDIT</a
+          >
         </div>
       </div>
     </div>

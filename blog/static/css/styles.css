@@ -156,9 +156,38 @@ footer {
 
   .square-image {
     object-fit: cover;
-    height: 100%; /* Adjust the height as needed */
-    width: 100%; /* Ensure the image covers the entire container */
+    height: 100%; 
+    width: 100%; 
   }
 
   
-  
+  .film-image-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .film-rank {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    background-color: rgb(255, 255, 255);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  .rank-overlay {
+    position: absolute;
+    top: 30%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    background-color: rgba(220, 220, 220, 0.726);
+    padding: 10px 15px; 
+    border-radius: 10px; 
+    font-weight: bold;
+    font-size: 100px;
+    z-index: 1; 
+}
+  .film-img {
+    filter: blur(5px);
+  }

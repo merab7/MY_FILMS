@@ -1,4 +1,4 @@
-{% extends 'blog/base.html' %} {% load crispy_forms_tags %} {% block content %}
+{% extends 'blog/base.html' %} {% load crispy_forms_tags %}{% block content %}
 <div class="container">
   <h4 class="mt-5 mb-5 border-bottom">
     {{ post_author.username }}'s TOP 10 Films
@@ -6,7 +6,10 @@
   <div class="row">
     {% for film_card in t10 %}
     <div class="col-lg-4 mb-4">
-      <div class="card h-100 content-center">
+      <div class="card h-100 content-center position-relative">
+        <!-- Overlay div for rank number -->
+        <div class="rank-overlay">{{ film_card.rank }}</div>
+        <!-- Film image -->
         <img src="{{ film_card.film.img_url }}" class="card-img-top film-img" />
         <div class="card-body">
           <h5 class="card-title">{{ film_card.film.title }}</h5>
@@ -24,15 +27,18 @@
           </p>
           <p class="list-group-item">{{ film_card.film.review }}</p>
         </ul>
-
+        {% if user == film_card.author %}
         <div class="card-footer d-flex justify-content-between">
           <a
             href="{% url 't10-delete' pk=film_card.pk %}"
             class="btn delete-btn"
             >POP</a
           >
-          <a href="#" class="btn edit-btn">EDIT</a>
+          <a href="{% url 'update-rank' pk=film_card.pk %}" class="btn edit-btn"
+            >EDIT</a
+          >
         </div>
+        {% endif %}
       </div>
     </div>
     {% endfor %}
