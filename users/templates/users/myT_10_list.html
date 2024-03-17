@@ -1,0 +1,39 @@
+{% extends 'blog/base.html' %} {% load crispy_forms_tags %} {% block content %}
+<div class="container">
+  <h4 class="mt-5 mb-5 border-bottom">{{ user.username }}'s TOP 10 Films</h4>
+  <div class="row">
+    {% for film_card in my_films %}
+    <div class="col-lg-4 mb-4">
+      <div class="card h-100 content-center">
+        <img src="{{ film_card.film.img_url }}" class="card-img-top film-img" />
+        <div class="card-body">
+          <h5 class="card-title">{{ film_card.film.title }}</h5>
+          <p class="card-text">{{ film_card.film.year }}</p>
+          <p class="card-text description">
+            {{ film_card.film.description|truncatechars:50 }}
+          </p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item text-warning fs-5">
+            IMDB {{ film_card.film.rating }}
+          </li>
+          <p class="list-group-item text-primary text-bolder fs-5">
+            {{ film_card.film.ranking }}
+          </p>
+          <p class="list-group-item">{{ film_card.film.review }}</p>
+        </ul>
+
+        <div class="card-footer d-flex justify-content-between">
+          <a
+            href="{% url 't10-delete' pk=film_card.pk %}"
+            class="btn delete-btn"
+            >POP</a
+          >
+          <a href="#" class="btn edit-btn">EDIT</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

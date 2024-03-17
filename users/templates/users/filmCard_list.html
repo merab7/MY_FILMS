@@ -54,7 +54,11 @@
                 class="btn post-btn"
                 >POST</a
               >
-              <a href="#" class="btn t10-btn">T10</a>
+              <a
+                href="{% url 'add_to_t10' pk=film_card.pk %}"
+                class="btn t10-btn"
+                >T10</a
+              >
               <a
                 href="{% url 'update-filmCard' pk=film_card.pk %}"
                 class="btn edit-btn"

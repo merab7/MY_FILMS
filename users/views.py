@@ -1,17 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, FilmSearchForm, FilmReviewForm, Post_text_form
+from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, FilmSearchForm, FilmReviewForm, Post_text_form, Rank_form
 from django.views.generic.edit import CreateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from blog.models import FilmCard, Post
+from blog.models import FilmCard, Post, MyT_10
 from django.views.generic.list import ListView
 from .films_from_api import Film_data
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import DeleteView, UpdateView
 from django.contrib.auth.models import User
+
 
 
 
@@ -94,6 +95,9 @@ def add_to_my_films(request, id):
         if request.method == 'POST':
             form = FilmReviewForm(request.POST)
             if form.is_valid():
+                if FilmCard.objects.filter(title=film['original_title']).exists() and FilmCard.objects.filter(year=film['release_date']).exists() :
+                    messages.error(request, f'Film {film['original_title']} created in {film['release_date']} already exists in your films.')
+                    return redirect('user-films')
                 film_to_add = FilmCard(
                     title=film['original_title'],
                     year=film['release_date'],
@@ -147,7 +151,7 @@ def post_film(request, pk):
     return render(request, 'users/post_text.html', context)
 
 
-class FilmFromMyFilmsDeleteView(DeleteView):
+class FilmFromMyFilmsDeleteView(LoginRequiredMixin,DeleteView):
     model = FilmCard
     success_url = reverse_lazy("user-films")
        
@@ -165,7 +169,7 @@ def user_posts(request, username):
     return render(request, 'users/users_posts.html', context)
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin,UpdateView):
     model = Post
     fields = ["post_text"]
     template_name_suffix = "_update_form"
@@ -173,17 +177,80 @@ class PostUpdateView(UpdateView):
 
 
 
-class FilmCardUpdateView(UpdateView):
+class FilmCardUpdateView(LoginRequiredMixin,UpdateView):
     model = FilmCard
     fields = ["ranking", "review"]
     template_name_suffix = "_update_form"
     success_url = reverse_lazy("user-films")
 
 
+class My_Top_10_listView(LoginRequiredMixin,ListView):
+    model = MyT_10
+    paginate_by = 4
+
+    def get_queryset(self):
+        # Filter queryset to only include films added by the current user
+        queryset = MyT_10.objects.filter(author=self.request.user)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in the queryset of films for the current user
+        context['my_films'] = self.get_queryset()
+        
+        return context
 
 
 
+
+def add_to_t10(request, pk):
+    film = FilmCard.objects.get(pk=pk)
+
+
+def add_to_t10(request, pk):
+    film = FilmCard.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        form = Rank_form(request.POST)
+        if form.is_valid():
+            rank = form.cleaned_data.get('rank')
+            if MyT_10.objects.filter(film=film).exists():
+                messages.error(request, f'Film {film.title} already exists in the TOP_10.')
+                return redirect('user-films')  # Redirect to appropriate page
+            MyT_10.objects.create(rank=rank, film=film, author=request.user)
+            messages.success(request, f'Film {film.title} has been added to the TOP_10.')
+            return redirect('user-t10')  # Redirect to appropriate page
+        else:
+            messages.error(request, 'Please check the validity of the form and try again!')
+    else:
+        form = Rank_form()
+
+    context = {
+        'form': form,
+        'film': film,
+    }
+    return render(request, 'users/rank_form.html', context)
+
+
+
+class T10_DeleteView(LoginRequiredMixin,DeleteView):
+    model = MyT_10
+    success_url = reverse_lazy("user-t10")
 
     
 
 
+def post_author_t10(request, username):
+    post_author = get_object_or_404(User, username=username)
+    t10 = MyT_10.objects.filter(author=post_author)
+    context = {
+        't10' :t10,
+        'post_author' : post_author,
+    }
+
+    print(t10)
+
+    return render(request, 'users/authorsT10.html', context)
+    

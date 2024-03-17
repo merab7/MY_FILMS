@@ -16,8 +16,13 @@
                 <a href="{% url 'user-posts' username=post.author.username  %}"
                   >{{ post.author }}</a
                 >
+
                 <small class="text-muted d-block"
                   >{{ post.date_created|date:"F d, Y" }}</small
+                >
+                <a
+                  href="{% url 'post_author_t10' username=post.author.username %}"
+                  >{{post.author}}'s T10</a
                 >
               </div>
             </div>
@@ -63,6 +68,7 @@
               alt="{{ post.film.title }}"
             />
           </div>
+
           <div class="card-body">
             <h5 class="card-title">{{ post.film.title }}</h5>
             <p class="card-text">{{ post.film.year }}</p>
