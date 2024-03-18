@@ -35,9 +35,12 @@
             <div class="card-body">
               <h5 class="card-title">{{film_card.title}}</h5>
               <p class="card-text">{{film_card.year}}</p>
-              <p class="card-text description">
-                {{film_card.description|truncatechars:50}}
-              </p>
+              <a
+                href="{% url 'post-detail' pk=film_card.pk %}"
+                class="card-text"
+              >
+                {{ post.film.description|truncatechars:200 }}
+              </a>
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item text-warning fs-5">

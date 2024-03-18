@@ -11,6 +11,7 @@ from django.views.generic.list import ListView
 from .films_from_api import Film_data
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import DeleteView, UpdateView
+from django.views.generic.detail import DetailView
 from django.contrib.auth.models import User
 from django.db.models import F
 
@@ -272,3 +273,9 @@ class Rank_update_view(LoginRequiredMixin, UpdateView):
             messages.error(self.request, f'Position {rank} is already taken by {conflicting_film_title}!')
             return self.form_invalid(form)
         return super().form_valid(form)
+    
+
+
+class PostDetailView(DetailView):
+    model = Post
+

@@ -191,3 +191,10 @@ footer {
   .film-img {
     filter: blur(5px);
   }
+
+
+  .detail-image {
+    object-fit: cover;
+    height: 100%; 
+    width: 100%; 
+  }

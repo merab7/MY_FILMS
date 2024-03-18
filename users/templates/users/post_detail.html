@@ -2,18 +2,18 @@
 <div class="container mt-4">
   <div class="row justify-content-center">
     <div class="col-md-8">
-      {% for post in posts %}
       <div class="card mb-5">
         <div class="card-header">
           <div class="d-flex justify-content-between align-items-center">
             <div class="d-flex flex-row align-items-center">
               <img
                 class="img-fluid rounded-circle account-img"
-                src="{{ post.author.profile.image.url }}"
-                alt="{{ post.author }}"
+                src="{{ object.author.profile.image.url }}"
+                alt="{{ object.author }}"
               />
               <div class="ms-3">
-                <a href="{% url 'user-posts' username=post.author.username  %}"
+                <a
+                  href="{% url 'user-posts' username=object.author.username  %}"
                   >{{ post.author }}</a
                 >
 
@@ -21,12 +21,12 @@
                   >{{ post.date_created|date:"F d, Y" }}</small
                 >
                 <a
-                  href="{% url 'post_author_t10' username=post.author.username %}"
-                  >{{post.author}}'s T10</a
+                  href="{% url 'post_author_t10' username=object.author.username %}"
+                  >{{object.author}}'s T10</a
                 >
               </div>
             </div>
-            {% if user == post.author %}
+            {% if user == object.author %}
             <div class="dropdown">
               <button
                 class="btn btn-secondary dropdown-toggle"
@@ -40,14 +40,14 @@
                 <li>
                   <a
                     class="dropdown-item"
-                    href="{% url 'delete-post' pk=post.pk %}"
+                    href="{% url 'delete-post' pk=object.pk %}"
                     >DELETE</a
                   >
                 </li>
                 <li>
                   <a
                     class="dropdown-item"
-                    href="{% url 'update-post' pk=post.pk %}"
+                    href="{% url 'update-post' pk=object.pk %}"
                     >EDIT</a
                   >
                 </li>
@@ -58,32 +58,30 @@
         </div>
 
         <div class="card-body">
-          <p class="card-text">{{ post.post_text }}</p>
+          <p class="card-text">{{ object.post_text }}</p>
         </div>
         <div class="d-flex flex-row">
           <div class="card-body">
             <img
-              src="{{ post.film.img_url }}"
-              class="card-img-top square-image"
+              src="{{ object.film.img_url }}"
+              class="card-img-top detail-image"
               alt="{{ post.film.title }}"
             />
           </div>
 
           <div class="card-body">
-            <h5 class="card-title">{{ post.film.title }}</h5>
-            <p class="card-text">{{ post.film.year }}</p>
-            <a href="{% url 'post-detail' pk=post.pk %}" class="card-text">
-              {{ post.film.description|truncatechars:200 }}
-            </a>
+            <h5 class="card-title">{{ object.film.title }}</h5>
+            <p class="card-text">{{ object.film.year }}</p>
+            <p class="card-text">{{ object.film.description }}</p>
 
             <ul class="list-group list-group-flush">
               <li class="list-group-item text-warning fs-5">
-                IMDB {{ post.film.rating }}
+                IMDB {{ object.film.rating }}
               </li>
               <li class="list-group-item text-primary fs-5">
-                {{ post.film.ranking }}
+                {{ object.film.ranking }}
               </li>
-              <li class="list-group-item">{{ post.film.review }}</li>
+              <li class="list-group-item">{{ object.film.review }}</li>
             </ul>
           </div>
         </div>
@@ -92,11 +90,6 @@
           <a href="#" class="btn btn-comment">🗯</a>
         </div>
       </div>
-      {% empty %}
-      <div class="text-center">
-        <h1>No posts yet</h1>
-      </div>
-      {% endfor %}
       <a href="{% url 'user-films' %}" class="btn btn-success mt-5 mb-5"
         >Add Post</a
       >
