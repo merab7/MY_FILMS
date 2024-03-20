@@ -126,6 +126,13 @@ footer {
     margin-bottom: 16px;
   }
 
+.comment-img {
+    height: 50px;
+    width:50px;
+    margin-right: 20px;
+    margin-bottom: 16px;
+  }
+
  
 
   .post-btn:hover {

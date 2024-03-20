@@ -51,3 +51,10 @@ class Rank_form(forms.Form):
     rank = forms.FloatField(max_value=10, label='rank')
 
 
+
+class Comment_form(forms.Form):
+        comment = forms.CharField(label='comment', widget=forms.Textarea(attrs={'class': 'form-control'}))
+
+
+
+

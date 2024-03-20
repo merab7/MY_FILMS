@@ -1,19 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, FilmSearchForm, FilmReviewForm, Post_text_form, Rank_form
+from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm, FilmSearchForm, FilmReviewForm, Post_text_form, Rank_form, Comment_form
 from django.views.generic.edit import CreateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from blog.models import FilmCard, Post, MyT_10
+from blog.models import FilmCard, Post, MyT_10, Comment
 from django.views.generic.list import ListView
 from .films_from_api import Film_data
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import DeleteView, UpdateView
 from django.views.generic.detail import DetailView
 from django.contrib.auth.models import User
-from django.db.models import F
+import json
 
 
 
@@ -278,4 +278,27 @@ class Rank_update_view(LoginRequiredMixin, UpdateView):
 
 class PostDetailView(DetailView):
     model = Post
+    template_name = 'users/post_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = Comment_form()
+        context['comment'] = Comment.objects.filter(post=self.get_object())
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = Comment_form(request.POST)
+        if form.is_valid():
+            comment = form.cleaned_data.get('comment')
+            Comment.objects.create(author=request.user, post=self.object, text=comment)
+            return redirect('post-detail', pk=self.object.pk)
+        else:
+            context = self.get_context_data()
+            context['form'] = form
+            
+            
+            return render(request, self.template_name, context)
+
+
+     
