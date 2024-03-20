@@ -88,31 +88,87 @@
       </div>
       <div>
         {% if comment %} {% for comment in comment %}
-        <div class="d-flex border p-2 mb-3">
-          <img
-            src="{{comment.author.profile.image.url}}"
-            class="img-fluid rounded-circle comment-img"
-            alt=""
-          />
-          <div class="d-flex flex-column">
-            <small class="text-muted d-block"
-              >{{comment.author.username}}</small
-            >
-            <small class="text-muted d-block">
-              {{comment.date_created|date:"F d, Y" }}
-            </small>
+        <div class="d-flex border p-2 mb-3 justify-content-between">
+          <div class="d-flex">
+            <img
+              src="{{comment.author.profile.image.url}}"
+              class="img-fluid rounded-circle comment-img"
+              alt=""
+            />
+            <div class="d-flex flex-column">
+              <small class="text-muted d-block"
+                >{{comment.author.username}}</small
+              >
+              <small class="text-muted d-block">
+                {{comment.date_created|date:"F d, Y" }}
+              </small>
 
-            <p class="mt-2">{{comment.text}}</p>
+              <p class="mt-2">{{comment.text}}</p>
+            </div>
           </div>
+          {% if user == comment.author %}
+          <div class="dropdown">
+            <button
+              class="btn"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              •••
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="{% url 'comment-delete' pk=comment.pk post_pk=object.pk %}"
+                  >DELETE</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="{% url 'comment-update' pk=comment.pk post_pk=object.pk %}"
+                  >EDIT</a
+                >
+              </li>
+            </ul>
+          </div>
+          {% elif user == object.author %}
+          <div class="dropdown">
+            <button
+              class="btn"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              •••
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="{% url 'comment-delete' pk=comment.pk post_pk=object.pk %}"
+                  >DELETE</a
+                >
+              </li>
+            </ul>
+          </div>
+          {% endif %}
         </div>
         {% endfor %}{% endif %}
-      </div>
-      <div>
-        <form method="post">
-          {% csrf_token %} {{ form | crispy }}
-          <input class="btn btn-success" type="submit" value="Post" />
+
+        <form class="comment-form" method="post">
+          {% csrf_token %}
+          <textarea
+            class="form-control"
+            name="comment"
+            rows="2"
+            placeholder="Write your comment here..."
+          ></textarea>
+          <input class="btn btn-info" type="submit" value="comment" />
         </form>
       </div>
+
       <a href="{% url 'user-films' %}" class="btn btn-success mt-5 mb-5"
         >Add Post</a
       >

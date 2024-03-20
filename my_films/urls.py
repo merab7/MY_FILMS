@@ -3,7 +3,8 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from users.views import SignUpView, user_not_authenticated, FilmListView, \
                         FilmFromMyFilmsDeleteView, PostUpdateView, \
-                        FilmCardUpdateView, My_Top_10_listView, T10_DeleteView, Rank_update_view, PostDetailView
+                        FilmCardUpdateView, My_Top_10_listView, T10_DeleteView, Rank_update_view, PostDetailView, \
+                        CommentDeleteView, CommentUpdateView
 from blog.views import PostDeleteView
 from django.contrib.auth.decorators import login_required
 from . import settings
@@ -36,6 +37,9 @@ urlpatterns = [
     path('edit-ranking/<pk>', login_required(Rank_update_view.as_view(template_name = "users/myT_10_update_form.html")), name='update-rank'),
     #post_details
     path("post-details/<pk>", PostDetailView.as_view(template_name = "users/post_detail.html"), name="post-detail"),
+    #comments
+    path('delete-comment/<post_pk>/<pk>', login_required(CommentDeleteView.as_view(template_name = "users/comment_confirm_delete.html")), name='comment-delete'),
+    path('update-comment/<post_pk>/<pk>', login_required(CommentUpdateView.as_view(template_name = "users/comment_update_form.html")), name='comment-update'),
   
 ]
 

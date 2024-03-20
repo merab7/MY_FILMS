@@ -301,4 +301,19 @@ class PostDetailView(DetailView):
             return render(request, self.template_name, context)
 
 
-     
+
+class CommentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Comment
+    def get_success_url(self):
+        post_pk = self.kwargs.get('post_pk')
+        return reverse_lazy('post-detail', kwargs={'pk': post_pk})   
+    
+
+class CommentUpdateView(LoginRequiredMixin,UpdateView):
+    model = Comment
+    fields = ["text"]
+    template_name_suffix = "_update_form"
+    
+    def get_success_url(self):
+        post_pk = self.kwargs.get('post_pk')
+        return reverse_lazy('post-detail', kwargs={'pk': post_pk})   

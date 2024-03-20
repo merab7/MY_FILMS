@@ -205,3 +205,15 @@ footer {
     height: 100%; 
     width: 100%; 
   }
+
+.comment-form {
+    margin-left: 5px;
+}
+.comment-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+}
