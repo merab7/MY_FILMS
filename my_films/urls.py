@@ -36,7 +36,7 @@ urlpatterns = [
     path('pop/<pk>', login_required( T10_DeleteView.as_view(template_name = "users/myT_10_confirm_delete.html")), name='t10-delete'),
     path('edit-ranking/<pk>', login_required(Rank_update_view.as_view(template_name = "users/myT_10_update_form.html")), name='update-rank'),
     #post_details
-    path("post-details/<pk>", PostDetailView.as_view(template_name = "users/post_detail.html"), name="post-detail"),
+    path("post-details/<pk>", login_required(PostDetailView.as_view(template_name = "users/post_detail.html")), name="post-detail"),
     #comments
     path('delete-comment/<post_pk>/<pk>', login_required(CommentDeleteView.as_view(template_name = "users/comment_confirm_delete.html")), name='comment-delete'),
     path('update-comment/<post_pk>/<pk>', login_required(CommentUpdateView.as_view(template_name = "users/comment_update_form.html")), name='comment-update'),

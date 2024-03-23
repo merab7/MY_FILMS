@@ -1,8 +1,6 @@
-/* Custom Styles */
 
-/* Add a bit of padding to the body */
 body {
-    padding-top: 2px; /* Adjust based on your navbar height */
+    padding-top: 100px; /* Adjust according to your navbar's height */
 }
 
 /* Override Bootstrap container for more spacing */
@@ -44,13 +42,13 @@ form {
 .btn-like:hover {
     background-color: #ed8fd9; /* Slightly darker on hover */
     border-color: #ed8fd9;
-    width: 50px;
+
 
 }
 .btn-comment:hover {
     background-color: #0056b3; /* Slightly darker on hover */
     border-color: #0056b3;
-    width: 50px;
+ 
 
 }
 .btn :hover {
@@ -217,3 +215,34 @@ footer {
     border-radius: 5px;
     resize: vertical;
 }
+
+
+.like-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .like-tooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+  
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .like-container:hover .like-tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+  

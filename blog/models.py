@@ -28,6 +28,7 @@ class Post(models.Model):
     post_text = models.TextField()
     film = models.ForeignKey(FilmCard, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_liked = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.author.username} - {self.date_created}"
@@ -52,6 +53,15 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.author.username} - {self.text[:20]}..."
+    
+
+class Likes(models.Model):
+    post = models.ForeignKey(Post, related_name='likes', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_liked = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.author.username}"
 
 
 

@@ -284,8 +284,9 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['form'] = Comment_form()
         context['comment'] = Comment.objects.filter(post=self.get_object())
+        context['comment_count'] = Comment.objects.filter(post=self.get_object()).count()
         return context
-
+  
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = Comment_form(request.POST)
@@ -313,7 +314,11 @@ class CommentUpdateView(LoginRequiredMixin,UpdateView):
     model = Comment
     fields = ["text"]
     template_name_suffix = "_update_form"
-    
+
     def get_success_url(self):
         post_pk = self.kwargs.get('post_pk')
         return reverse_lazy('post-detail', kwargs={'pk': post_pk})   
+    
+
+
+   

@@ -19,7 +19,7 @@
   </head>
   <body>
     <nav
-      class="container navbar navbar-expand-lg bg-body-tertiary justify-content-between"
+      class="container mt-0 navbar navbar-expand-lg bg-body-tertiary justify-content-between fixed-top"
     >
       <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'blog-home' %}">
@@ -53,9 +53,17 @@
                 >Home</a
               >
             </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'users-profile' %}"
+                >{{user.username}}</a
+              >
+            </li>
+            {% else %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'users-profile' %}">Profile</a>
             </li>
+            {% endif %}
           </ul>
           <ul class="navbar-nav ml-lg-auto">
             {% if user.is_authenticated %}
@@ -106,5 +114,6 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    {% block javascript %}{% endblock %}
   </body>
 </html>
