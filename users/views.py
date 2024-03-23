@@ -13,6 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import DeleteView, UpdateView
 from django.views.generic.detail import DetailView
 from django.contrib.auth.models import User
+from django.db.models import F
 import json
 
 
@@ -218,9 +219,9 @@ def add_to_t10(request, pk):
                 messages.error(request, f'{film.title} is already in top 10!')
                 return redirect('user-films')
             elif MyT_10.objects.filter(rank=rank, author=request.user).exists():
-                conflicting_film_title = MyT_10.objects.get(rank=rank).film.title
-                messages.error(request, f'Position {rank} is already taken by {conflicting_film_title}!')
-            elif MyT_10.objects.count() > 10:
+                # Increment the rank of conflicting films
+                MyT_10.objects.filter(rank__gte=rank, author=request.user).update(rank=F('rank') + 1)
+            elif MyT_10.objects.filter(author=request.user).count() >= 10:
                 messages.error(request, 'Top 10 is full')
             else:
                 MyT_10.objects.create(rank=rank, film=film, author=request.user)
@@ -240,9 +241,20 @@ def add_to_t10(request, pk):
 
 
 
-class T10_DeleteView(LoginRequiredMixin,DeleteView):
+
+
+
+class T10_DeleteView(LoginRequiredMixin, DeleteView):
     model = MyT_10
     success_url = reverse_lazy("user-t10")
+
+    def delete(self, request, *args, **kwargs):
+        # Decrement the rank of films with a higher rank
+        film = self.get_object()
+        MyT_10.objects.filter(rank__gt=film.rank, author=request.user).update(rank=F('rank') - 1)
+        return super().delete(request, *args, **kwargs)
+
+
 
     
 
@@ -267,12 +279,16 @@ class Rank_update_view(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("user-t10")
 
     def form_valid(self, form):
-        rank = form.cleaned_data['rank']
-        if MyT_10.objects.filter(rank=rank, author=self.request.user).exists():
-            conflicting_film_title = MyT_10.objects.get(rank=rank).film.title
-            messages.error(self.request, f'Position {rank} is already taken by {conflicting_film_title}!')
-            return self.form_invalid(form)
+        old_rank = self.object.rank
+        new_rank = form.cleaned_data['rank']
+        if old_rank != new_rank and MyT_10.objects.filter(rank=new_rank, author=self.request.user).exists():
+            # Increment the rank of conflicting films
+            MyT_10.objects.filter(rank__gte=new_rank, rank__lt=old_rank, author=self.request.user).update(rank=F('rank') + 1)
         return super().form_valid(form)
+
+
+
+
     
 
 

@@ -1,12 +1,11 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from .models import Post, Comment , Likes
-from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
-
-
-
+@login_required
 def home(request):
   
     posts = Post.objects.all().order_by('-date_created')
@@ -36,8 +35,10 @@ class PostDeleteView(DeleteView):
     success_url = reverse_lazy("blog-home")
 
 
-from django.http import JsonResponse
 
+
+
+@login_required
 def like_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
     user = request.user
