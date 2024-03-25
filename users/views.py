@@ -14,7 +14,8 @@ from django.views.generic.edit import DeleteView, UpdateView
 from django.views.generic.detail import DetailView
 from django.contrib.auth.models import User
 from django.db.models import F
-import json
+from django.http import HttpResponseRedirect
+
 
 
 
@@ -208,6 +209,8 @@ class My_Top_10_listView(LoginRequiredMixin, ListView):
 
 
 
+from django.db.models import Max
+
 def add_to_t10(request, pk):
     film = FilmCard.objects.get(pk=pk)
 
@@ -218,15 +221,25 @@ def add_to_t10(request, pk):
             if MyT_10.objects.filter(film=film).exists():
                 messages.error(request, f'{film.title} is already in top 10!')
                 return redirect('user-films')
-            elif MyT_10.objects.filter(rank=rank, author=request.user).exists():
-                # Increment the rank of conflicting films
-                MyT_10.objects.filter(rank__gte=rank, author=request.user).update(rank=F('rank') + 1)
-            elif MyT_10.objects.filter(author=request.user).count() >= 10:
-                messages.error(request, 'Top 10 is full')
-            else:
-                MyT_10.objects.create(rank=rank, film=film, author=request.user)
-                messages.success(request, f'Film {film.title} has been added to the TOP_10.')
-                return redirect('user-t10')  # Redirect to appropriate page after successful addition
+
+            # Calculate the maximum rank in the current user's top 10 list
+            max_rank = MyT_10.objects.filter(author=request.user).aggregate(max_rank=Max('rank'))['max_rank']
+            if max_rank is None:
+                max_rank = 0
+            
+            # If the specified rank is greater than the maximum rank, adjust it
+            if rank > max_rank + 1:
+                rank = max_rank + 1
+
+            # Increment the rank of conflicting films and films after the conflicting film
+            conflicting_films = MyT_10.objects.filter(rank__gte=rank, author=request.user)
+            for conflicting_film in conflicting_films:
+                conflicting_film.rank += 1
+                conflicting_film.save()
+            MyT_10.objects.create(rank=rank, film=film, author=request.user)
+            messages.success(request, f'Film {film.title} has been added to the TOP_10.')
+            return redirect('user-t10') 
+
         else:
             messages.error(request, 'Please check the validity of the form and try again!')
     else:
@@ -240,19 +253,27 @@ def add_to_t10(request, pk):
 
 
 
+    
+def deleteT10(request, pk):
+    film = MyT_10.objects.get(pk=pk)
+    deleted_rank = film.rank
+    film.delete() 
+    for film in MyT_10.objects.filter(rank__gt=deleted_rank, author=request.user):
+        film.rank -= 1
+        film.save()
+
+   
+    
+   
+
+    return redirect('user-t10')
 
 
 
 
-class T10_DeleteView(LoginRequiredMixin, DeleteView):
-    model = MyT_10
-    success_url = reverse_lazy("user-t10")
 
-    def delete(self, request, *args, **kwargs):
-        # Decrement the rank of films with a higher rank
-        film = self.get_object()
-        MyT_10.objects.filter(rank__gt=film.rank, author=request.user).update(rank=F('rank') - 1)
-        return super().delete(request, *args, **kwargs)
+
+     
 
 
 

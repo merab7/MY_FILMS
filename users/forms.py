@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Profile
+from blog.models import FilmCard
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField()
@@ -49,7 +50,7 @@ class Post_text_form(forms.Form):
 
 class Rank_form(forms.Form):
     rank = forms.FloatField(max_value=10, label='rank')
-
+    
 
 
 class Comment_form(forms.Form):

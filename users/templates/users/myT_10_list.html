@@ -1,5 +1,6 @@
 {% extends 'blog/base.html' %} {% load crispy_forms_tags %} {% block content %}
 <div class="container">
+  {% include 'users/btns.html' %}
   <h4 class="mt-5 mb-5 border-bottom">{{ user.username }}'s TOP 10 Films</h4>
   <div class="row">
     {% for film_card in my_films %}

@@ -1,4 +1,5 @@
-{% extends 'blog/base.html' %} {% load crispy_forms_tags %} {% block content %}
+{% extends 'blog/base.html'%} {% load crispy_forms_tags %} {% block content %}
+
 <div class="container">
   <div>
     <div class="d-flex flex-row mt-5">
@@ -10,18 +11,10 @@
       <div class="media-body">
         <h2 class="account-heading">{{ user.username }}</h2>
         <p class="text-secondary">{{ user.email }}</p>
-        <div>
-          <a class="btn btn-warning" href="{% url 'user-films' %}">My films</a>
-          <a class="btn btn-success" href="{% url 'user-t10' %}">My T10</a>
-          <a
-            class="btn btn-info"
-            href="{% url 'user-posts' username=user.username %}"
-            >Posts</a
-          >
-        </div>
       </div>
     </div>
   </div>
+  {% include 'users/btns.html' %}
   <div class="mt-5 p-5 border profile_div">
     <form action="" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
