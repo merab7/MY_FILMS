@@ -22,4 +22,3 @@ class Film_data():
        response = requests.get(url, headers=self.headers)
        data = response.json()
        return data
-

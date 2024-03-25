@@ -246,3 +246,18 @@ footer {
     opacity: 1;
   }
   
+  .like-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .like-content {
+    display: flex;
+    align-items: center;
+  }
+  
+  .btn-like {
+    text-decoration: none;
+  }
+  

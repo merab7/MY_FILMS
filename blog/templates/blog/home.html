@@ -16,14 +16,14 @@
                 <a href="{% url 'user-posts' username=post.author.username  %}"
                   >{{ post.author }}</a
                 >
-
                 <small class="text-muted d-block"
                   >{{ post.date_created|date:"F d, Y" }}</small
                 >
                 <a
                   href="{% url 'post_author_t10' username=post.author.username %}"
-                  >{{post.author}}'s T10</a
                 >
+                  {{post.author}}'s T10
+                </a>
               </div>
             </div>
             {% if user == post.author %}
@@ -88,67 +88,80 @@
           </div>
         </div>
         <div class="d-flex flex-row justify-content-center">
-          {% if post_is_liked|get_item:post.pk %}
           <div class="like-container">
-            <button
-              data-url="{% url 'like-post' pk=post.pk %}"
-              class="btn btn-like"
-            >
-              ❤️{{ post_likes_count|get_item:post.pk }}
-            </button>
-            <div class="like-tooltip">
-              {{ post_like_authors|get_item:post.pk }}
+            <div class="like-content">
+              {% if post_is_liked|get_item:post.pk %}
+              <a
+                href="{% url 'like-post' pk=post.pk %}"
+                class="btn btn-like"
+                data-post-id="{{ post.pk }}"
+              >
+                ❤️
+              </a>
+              {% else %}
+              <a
+                href="{% url 'like-post' pk=post.pk %}"
+                class="btn btn-like"
+                data-post-id="{{ post.pk }}"
+              >
+                🤍
+              </a>
+              {% endif %}
+              <span class="like_count_{{ post.pk }}">
+                {{ post_likes_count|get_item:post.pk }}
+              </span>
             </div>
           </div>
-          {% else %}
-          <div class="like-container">
-            <button
-              data-url="{% url 'like-post' pk=post.pk %}"
-              class="btn btn-like"
-            >
-              🤍{{ post_likes_count|get_item:post.pk }}
-            </button>
-            <div class="like-tooltip">
-              {{ post_like_authors|get_item:post.pk }}
-            </div>
-          </div>
-
-          {% endif %}
-
           <a href="{% url 'post-detail' pk=post.pk %}" class="btn btn-comment">
             🗯 {{ post_comment_count|get_item:post.pk }}
           </a>
         </div>
-        {% block javascript %}
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script>
-          $(document).ready(function () {
-            $(".btn-like").click(function (event) {
-              event.preventDefault();
-              var url = $(this).data("url");
-              var btn = $(this);
-              $.ajax({
-                url: url,
-                success: function (response) {
-                  btn.text(
-                    (response.is_liked ? "❤️" : "🤍") + response.likes_count
-                  );
-                },
-              });
-            });
-          });
-        </script>
-        {% endblock %}
-      </div>
-      {% empty %}
-      <div class="text-center">
-        <h1>No posts yet</h1>
       </div>
       {% endfor %}
-      <a href="{% url 'user-films' %}" class="btn btn-success mt-5 mb-5"
-        >Add Post</a
-      >
+      <a href="{% url 'user-films' %}" class="btn btn-success mt-5 mb-5">
+        Add Post
+      </a>
     </div>
   </div>
 </div>
+
+<!-- Include jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+    // Function to handle like/unlike click event
+    $(".btn-like").click(function (e) {
+      e.preventDefault(); // Prevent default link behavior
+
+      var postId = $(this).data("post-id"); // Get post ID from data attribute
+      var likeBtn = $(this); // Reference to the like button
+
+      // AJAX request to like/unlike post
+      $.ajax({
+        url: $(this).attr("href"), // URL to like_post view
+        type: "POST",
+        dataType: "json",
+        beforeSend: function (xhr, settings) {
+          // Include CSRF token in the request headers
+          xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+        },
+        success: function (response) {
+          // Update like count
+          $(".like_count_" + postId).text(response.likes_count);
+
+          // Toggle emojis based on user action
+          if (response.is_liked) {
+            likeBtn.text("❤️"); // Change to red heart
+          } else {
+            likeBtn.text("🤍"); // Change to white heart
+          }
+        },
+        error: function (xhr, status, error) {
+          // Handle error
+          console.error(xhr.responseText);
+        },
+      });
+    });
+  });
+</script>
 {% endblock %}

@@ -139,7 +139,7 @@ def post_film(request, pk):
             post_text = form.cleaned_data['post_text']
             author = request.user
 
-            post = Post.objects.create(
+            Post.objects.create(
                 post_text=post_text,
                 film=film,
                 author=author,
