@@ -33,7 +33,7 @@ urlpatterns = [
     path('edit-filmCard/<pk>', login_required(FilmCardUpdateView.as_view(template_name = "users/filmCard_update_form.html")), name='update-filmCard'),
     #t10
     path('my-top10/',login_required( My_Top_10_listView.as_view(template_name = "users/myT_10_list.html")), name='user-t10'),
-    # path('pop/<pk>', login_required( T10_DeleteView.as_view(template_name = "users/myT_10_confirm_delete.html")), name='t10-delete'),
+ 
     path('edit-ranking/<pk>', login_required(Rank_update_view.as_view(template_name = "users/myT_10_update_form.html")), name='update-rank'),
     #post_details
     path("post-details/<pk>", login_required(PostDetailView.as_view(template_name = "users/post_detail.html")), name="post-detail"),

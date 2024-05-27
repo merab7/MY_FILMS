@@ -253,7 +253,7 @@ def add_to_t10(request, pk):
 
 
 
-    
+@login_required   
 def deleteT10(request, pk):
     film = MyT_10.objects.get(pk=pk)
     deleted_rank = film.rank

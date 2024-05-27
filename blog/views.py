@@ -5,7 +5,7 @@ from django.views.generic.edit import DeleteView
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 
-@login_required
+
 def home(request):
   
     posts = Post.objects.all().order_by('-date_created')
@@ -16,8 +16,9 @@ def home(request):
     for post in posts:
         post_comments_count[post.pk] = Comment.objects.filter(post=post).count()
         post_likes_count[post.pk] = Likes.objects.filter(post=post).count()
-        post_is_liked[post.pk] = Likes.objects.filter(post=post, author=request.user).exists()
-        post_like_authors[post.pk] = ', '.join(like.author.username for like in Likes.objects.filter(post=post))
+        if request.user.is_authenticated:
+            post_is_liked[post.pk] = Likes.objects.filter(post=post, author=request.user).exists()
+            post_like_authors[post.pk] = ', '.join(like.author.username for like in Likes.objects.filter(post=post))
 
     context = {
         'posts': posts,
@@ -40,6 +41,7 @@ class PostDeleteView(DeleteView):
 
 @login_required
 def like_post(request, pk):
+    
     post = get_object_or_404(Post, pk=pk)
     user = request.user
 
