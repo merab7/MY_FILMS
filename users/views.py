@@ -100,7 +100,7 @@ def add_to_my_films(request, id):
             form = FilmReviewForm(request.POST)
             if form.is_valid():
                 if FilmCard.objects.filter(title=film['original_title']).exists() and FilmCard.objects.filter(year=film['release_date']).exists() :
-                    messages.error(request, f'Film {film['original_title']} created in {film['release_date']} already exists in your films.')
+                    messages.error(request, f"Film {film['original_title']} created in {film['release_date']} already exists in your films.")
                     return redirect('user-films')
                 film_to_add = FilmCard(
                     title=film['original_title'],
