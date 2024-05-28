@@ -35,14 +35,20 @@ class Post(models.Model):
     
 
 
+
+
+
 class MyT_10(models.Model):
+    id = models.BigAutoField(primary_key=True)
     date_created = models.DateTimeField(auto_now_add=True)
     rank = models.IntegerField(default=0)
     film = models.ForeignKey(FilmCard, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ['rank', '-date_created'] 
+        ordering = ['rank', '-date_created']
+
+
 
 
 class Comment(models.Model):

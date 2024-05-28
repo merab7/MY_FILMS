@@ -1,11 +1,14 @@
 import requests
-import os
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 class Film_data():
     def __init__(self) -> None:
         self.headers = {
     "accept": "application/json",
-    "Authorization": os.environ.get('TOP_FILM_HEADER_AUTHORIZATION')
+    "Authorization": env('TOP_FILM_HEADER_AUTHORIZATION')
 }
         
 
