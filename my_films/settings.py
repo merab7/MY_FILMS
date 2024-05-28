@@ -85,13 +85,7 @@ DATABASES = {
     }
 }
 
-import dj_database_url
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
-    )
-}
 
 
 
@@ -132,6 +126,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATIC_URL = '/static/'
 
+# Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
     BASE_DIR / 'static',
 )
