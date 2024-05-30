@@ -3,8 +3,8 @@ from .models import Post, Comment , Likes
 from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
 from django.http import JsonResponse
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-
 
 def home(request):
   
@@ -38,10 +38,11 @@ class PostDeleteView(DeleteView):
 
 
 
-
-@login_required
 def like_post(request, pk):
-    
+    if not request.user.is_authenticated:
+        login_url = reverse('login')
+        return JsonResponse({'redirect': login_url}, status=401)
+
     post = get_object_or_404(Post, pk=pk)
     user = request.user
 
@@ -52,10 +53,17 @@ def like_post(request, pk):
         Likes.objects.create(post=post, author=user)
         is_liked = True
 
+    likes_count = Likes.objects.filter(post=post).count()
     response = {
         'is_liked': is_liked,
-        'likes_count': Likes.objects.filter(post=post).count(),
+        'likes_count': likes_count,
     }
 
     return JsonResponse(response)
-  
+
+@login_required
+def get_likes(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    likes = Likes.objects.filter(post=post)
+    usernames = [like.author.username for like in likes]
+    return JsonResponse({'usernames': usernames})

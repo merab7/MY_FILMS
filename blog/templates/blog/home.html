@@ -13,16 +13,16 @@
                 alt="{{ post.author }}"
               />
               <div class="ms-3">
-                <a href="{% url 'user-posts' username=post.author.username  %}"
-                  >{{ post.author }}</a
-                >
-                <small class="text-muted d-block"
-                  >{{ post.date_created|date:"F d, Y" }}</small
-                >
+                <a href="{% url 'user-posts' username=post.author.username %}">
+                  {{ post.author }}
+                </a>
+                <small class="text-muted d-block">
+                  {{ post.date_created|date:"F d, Y" }}
+                </small>
                 <a
                   href="{% url 'post_author_t10' username=post.author.username %}"
                 >
-                  {{post.author}}'s T10
+                  {{ post.author }}'s T10
                 </a>
               </div>
             </div>
@@ -41,15 +41,17 @@
                   <a
                     class="dropdown-item"
                     href="{% url 'delete-post' pk=post.pk %}"
-                    >DELETE</a
                   >
+                    DELETE
+                  </a>
                 </li>
                 <li>
                   <a
                     class="dropdown-item"
                     href="{% url 'update-post' pk=post.pk %}"
-                    >EDIT</a
                   >
+                    EDIT
+                  </a>
                 </li>
               </ul>
             </div>
@@ -107,9 +109,9 @@
                 🤍
               </a>
               {% endif %}
-              <span class="like_count_{{ post.pk }}">
-                {{ post_likes_count|get_item:post.pk }}
-              </span>
+              <span class="like_count_{{ post.pk }}"
+                >{{ post_likes_count|get_item:post.pk }}</span
+              >
             </div>
           </div>
           <a href="{% url 'post-detail' pk=post.pk %}" class="btn btn-comment">
@@ -127,6 +129,11 @@
 
 <!-- Include jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link
+  rel="stylesheet"
+  href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+/>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
   $(document).ready(function () {
     // Function to handle like/unlike click event
@@ -157,7 +164,35 @@
           }
         },
         error: function (xhr, status, error) {
-          // Handle error
+          // Handle 401 Unauthorized response
+          if (xhr.status === 401) {
+            var response = JSON.parse(xhr.responseText);
+            window.location.href = response.redirect;
+          } else {
+            // Handle other errors
+            console.error(xhr.responseText);
+          }
+        },
+      });
+    });
+
+    // Function to handle hover event to show likes
+    $(".btn-like").hover(function () {
+      var postId = $(this).data("post-id"); // Get post ID from data attribute
+      var likeBtn = $(this); // Reference to the like button
+
+      // AJAX request to get likes
+      $.ajax({
+        url: "/get-likes/" + postId + "/", // URL to get_likes view
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+          // Create tooltip content
+          var tooltipContent = response.usernames.join(", ");
+          likeBtn.attr("title", tooltipContent); // Set tooltip content
+          likeBtn.tooltip({ trigger: "hover" }); // Initialize tooltip
+        },
+        error: function (xhr, status, error) {
           console.error(xhr.responseText);
         },
       });
