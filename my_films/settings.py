@@ -59,8 +59,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'my_films.wsgi.application'
 
 DATABASES = {
-    'default': dj_database_url.parse(env('DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+
+
+POSTGRES_LOCALLY=False
+if env.bool('PRODUCTION') or POSTGRES_LOCALLY:
+    DATABASES['default']= dj_database_url.parse(env('DATABASE_URL'))
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
