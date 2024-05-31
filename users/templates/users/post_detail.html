@@ -97,7 +97,9 @@
               alt=""
             />
             <div class="d-flex flex-column">
-              <a href="{% url  user-posts %}">{{comment.author.username}}</a>
+              <a href="{% url 'user-posts' username=comment.author.username %}"
+                >{{comment.author.username}}</a
+              >
 
               <small class="text-muted d-block">
                 {{comment.date_created|date:"F d, Y" }}
