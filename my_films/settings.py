@@ -11,7 +11,9 @@ environ.Env.read_env()
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=True)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.0', 'myfilms.up.railway.app']
+
+CSRF_TRUSTED_ORIGINS = ['https://myfilms.up.railway.app']
 
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
